@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"  # Streamlit app will run on port 5000
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"  # Nginx will run on port 80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
