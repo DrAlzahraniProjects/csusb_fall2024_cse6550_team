@@ -20,4 +20,4 @@ COPY app.py app.py
 EXPOSE 5000
 
 # Command to run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port=5000", "--server.address=0.0.0.0"]
+CMD ["python", "app.py"]
