@@ -3,7 +3,7 @@
 # Define Nginx configuration content
 NGINX_CONF_CONTENT='
 server {
-    listen 80;
+    listen 5000;
 
     location /team {
         proxy_pass http://localhost:5000;
