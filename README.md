@@ -7,3 +7,5 @@ To download this repository to your local machine, you will need Git installed. 
 
 ```bash
 git clone https://github.com/DrAlzahraniProjects/csusb_fall2024_cse6550_team.git
+
+cd your-repo-name
