@@ -23,5 +23,11 @@ To ensure you have the latest updates from the repository, run the following com
 git pull origin main
 ```
 
+### Step 4: Build the Docker Image
+
+Build the Docker image with:
+```bash
+git pull origin main
+```
 ## Requirements
 - Ensure you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed on your machine.
