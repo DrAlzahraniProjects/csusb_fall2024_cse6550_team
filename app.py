@@ -1,4 +1,5 @@
+# app.py
 import streamlit as st
 
-st.title("Hello World from Streamlit!")
-st.write("This is a simple Streamlit application running in Docker.")
+st.title('Hello, World!')
+st.write('This is a simple Streamlit app running on Docker.')
