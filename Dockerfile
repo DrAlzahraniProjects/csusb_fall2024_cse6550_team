@@ -25,9 +25,9 @@ RUN chmod +x /usr/local/bin/setup_nginx.sh
 # Copy the Streamlit app into the container
 COPY app.py app.py
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port 5005
+EXPOSE 5005
 
 # Run Nginx and Streamlit
 ENTRYPOINT ["/usr/local/bin/setup_nginx.sh"]
-CMD ["streamlit", "run", "app.py", "--server.port=5000", "--server.baseUrlPath=/team"]
+CMD ["streamlit", "run", "app.py", "--server.port=5005", "--server.baseUrlPath=/team"]
