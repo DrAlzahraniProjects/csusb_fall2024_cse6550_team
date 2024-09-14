@@ -27,7 +27,7 @@ git pull origin main
 
 Build the Docker image with:
 ```bash
-git pull origin main
+docker build -t team-app .
 ```
 ## Requirements
 - Ensure you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed on your machine.
