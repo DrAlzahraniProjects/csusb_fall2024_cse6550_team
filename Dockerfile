@@ -1,17 +1,23 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.10-slim
+# Dockerfile
+FROM python:3.11
 
 # Set the working directory
 WORKDIR /app
 
+# Install Mamba and Jupyter
+RUN pip install mamba jupyter
+
 # Copy the requirements file into the container
-COPY requirements.txt .
+COPY requirements.txt requirements.txt
 
-# Install any dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the Python dependencies
+RUN pip install -r requirements.txt
 
-# Copy the rest of the application code into the container
-COPY . .
+# Copy the Streamlit app into the container
+COPY app.py app.py
+
+# Expose port 5000
+EXPOSE 5000
 
 # Command to run the Streamlit app
-CMD ["streamlit", "run", "app.py"]
+CMD ["streamlit", "run", "app.py", "--server.port=5000", "--server.address=0.0.0.0"]
