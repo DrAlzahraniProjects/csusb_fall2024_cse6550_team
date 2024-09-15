@@ -1,37 +1,28 @@
-# Use a base image appropriate for your platform
-FROM debian:bullseye-slim AS base
+# Use a base image with multi-platform support
+FROM mambaorg/mambaforge:latest
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    bzip2 \
-    python3 \
-    python3-pip \
-    nginx \
-    supervisor \
-    && rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PORT=5005
 
-# Determine the architecture and install Micromamba
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then \
-        curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest -o micromamba-linux-64.tar.bz2 && \
-        tar -xvjf micromamba-linux-64.tar.bz2 -C /opt/micromamba && \
-        ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
-    elif [ "$ARCH" = "aarch64" ]; then \
-        curl -L https://micromamba.snakepit.net/api/micromamba/linux-arm64/latest -o micromamba-linux-arm64.tar.bz2 && \
-        tar -xvjf micromamba-linux-arm64.tar.bz2 -C /opt/micromamba && \
-        ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
-    else \
-        echo "Unsupported architecture: $ARCH"; \
-        exit 1; \
-    fi
-
-# Expose necessary ports
-EXPOSE 80 5005 8888
-
-# Copy application files and configure the server
-COPY . /app
+# Create and set the working directory
 WORKDIR /app
 
-# Start the application
-CMD ["python3", "app.py"]
+# Copy application files
+COPY app.py .
+COPY requirements.txt .
+
+# Install dependencies
+RUN micromamba create -n team-env python=3.8 \
+    && micromamba activate team-env \
+    && pip install -r requirements.txt \
+    && micromamba install -n team-env jupyter \
+    && micromamba clean --all --yes
+
+# Expose the application port
+EXPOSE 5005
+
+# Set environment variable for Streamlit to use the specified port
+ENV STREAMLIT_SERVER_PORT=5005
+
+# Command to run Streamlit and Jupyter
+CMD ["sh", "-c", "streamlit run app.py --server.port $PORT & jupyter notebook --no-browser --ip=0.0.0.0 --port=5005 --NotebookApp.base_url=/Jupyter"]
