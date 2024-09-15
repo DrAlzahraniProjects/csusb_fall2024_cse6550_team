@@ -38,4 +38,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80 5005
 
 # Start Supervisor to manage processes
-CMD ["supervisord", "-c", "/app/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/app/supervisord.conf"]
