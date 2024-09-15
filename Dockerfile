@@ -20,9 +20,9 @@ RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download
 ENV CONDA_PREFIX=/opt/miniforge
 ENV PATH="/opt/miniforge/bin:$PATH"
 
-# Install Jupyter and Python dependencies from requirements.txt
-RUN conda install -c conda-forge jupyter && \
-    pip install --no-cache-dir -r /app/requirements.txt
+# Copy requirements.txt and install Python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application files
 COPY . /app
