@@ -1,4 +1,4 @@
-# Start with a different base image
+# Start with a different base image for ARM64 architecture
 FROM arm64v8/debian:bullseye-slim
 
 # Set the working directory
@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install system dependencies (nginx, supervisor, curl, bzip2)
 RUN apt-get update && \
-    apt-get install -y nginx supervisor curl bzip2 && \
+    apt-get install -y curl bzip2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -28,8 +28,11 @@ RUN conda env create -f /app/environment.yml && \
 # Copy application files
 COPY . /app
 
-# Expose ports for Nginx, Streamlit, and Jupyter
-EXPOSE 80 5005 8501
+# Install necessary Python packages if not included in environment.yml
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Start Supervisor to manage processes
-CMD ["supervisord", "-c", "/app/supervisord.conf"]
+# Expose port for the application
+EXPOSE 5005
+
+# Set the command to run the application
+CMD ["python", "app.py"]
