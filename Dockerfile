@@ -1,5 +1,14 @@
-# Use a lightweight base image with Mamba
-FROM mambaorg/micromamba:1.4.2-bullseye-slim
+# Use a Python base image
+FROM python:3.9-slim
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y nginx supervisor curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Micromamba
+RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /usr/local/bin
 
 # Set the environment directory for Mamba
 ENV MAMBA_DOCKERFILE_ACTIVATE=1
@@ -11,12 +20,9 @@ WORKDIR /app
 # Copy environment.yml for Mamba environment setup
 COPY environment.yml /app/environment.yml
 
-# Fix permission issues and install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends nginx supervisor curl && \
-    micromamba create --name ${MAMBA_ENV} --file /app/environment.yml && \
-    micromamba clean --all --yes && \
-    rm -rf /var/lib/apt/lists/*
+# Create Mamba environment
+RUN micromamba create --name ${MAMBA_ENV} --file /app/environment.yml && \
+    micromamba clean --all --yes
 
 # Create directories for Nginx logs and PID file
 RUN mkdir -p /var/run/nginx /var/log/nginx /run
