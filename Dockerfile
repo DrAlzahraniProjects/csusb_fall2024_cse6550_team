@@ -34,5 +34,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose port for the application
 EXPOSE 5005
 
-# Start Streamlit application
-CMD ["streamlit", "run", "app.py"]
+# Start Streamlit application on port 5005
+CMD ["streamlit", "run", "app.py", "--server.port", "5005"]
