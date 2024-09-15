@@ -10,13 +10,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create directory for Micromamba
-RUN mkdir -p /opt/micromamba
-
-# Install Micromamba
-RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /opt/micromamba && \
+# Install Micromamba using Miniforge as an alternative
+RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o miniforge.sh && \
+    bash miniforge.sh -b -p /opt/micromamba && \
     ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba && \
-    micromamba --version
+    micromamba --version && \
+    micromamba clean --all --yes
 
 # Set the environment directory for Mamba
 ENV MAMBA_PREFIX=/opt/micromamba
