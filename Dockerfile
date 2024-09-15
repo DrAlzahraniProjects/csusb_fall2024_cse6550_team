@@ -35,5 +35,5 @@ RUN mamba activate base && \
 # Expose port 5005
 EXPOSE 5005
 
-# Command to run the application
-CMD ["python", "app.py"]
+# Command to run the Streamlit application
+CMD ["streamlit", "run", "app.py", "--server.port=5005"]
