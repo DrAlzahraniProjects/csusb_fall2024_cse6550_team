@@ -1,8 +1,8 @@
 # Use Miniconda3 base image
 FROM continuumio/miniconda3:latest
 
-# Set environment variables
-ENV LANG C.UTF-8
+# Set environment variables using the correct format
+ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=1
 
 # Install Streamlit and Jupyter
@@ -29,5 +29,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Expose port 80 for Nginx
 EXPOSE 80
 
-# Start Nginx and Streamlit
-CMD service nginx start && streamlit run app.py --server.port=5005 --server.baseUrlPath=/team5
+# Start Nginx and Streamlit using JSON format for CMD
+CMD ["/bin/bash", "-c", "service nginx start && streamlit run app.py --server.port=5005 --server.baseUrlPath=/team5"]
