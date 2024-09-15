@@ -1,5 +1,8 @@
-# app.py
 import streamlit as st
 
-st.title('Hello, World!')
-st.write('This is a simple Streamlit app running on Docker.')
+# Streamlit app that prints "HelloWorld"
+def main():
+    st.title("HelloWorld")
+
+if __name__ == "__main__":
+    main()
