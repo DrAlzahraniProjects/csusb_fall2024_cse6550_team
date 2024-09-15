@@ -1,5 +1,8 @@
-# Use an official base image for compatibility with all platforms
+# Use base image
 FROM mambaorg/micromamba:1.4.2
+
+# Make sure we are root (this should already be the case by default)
+USER root
 
 # Set the environment variables for Mamba
 ENV MAMBA_DOCKERFILE_ACTIVATE=1
@@ -18,13 +21,4 @@ RUN apt-get update && \
     micromamba clean --all --yes && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy app and configuration files
-COPY app.py /app/app.py
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose the necessary port
-EXPOSE 80
-
-# Start Supervisor to manage both nginx and the app
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Continue with the rest of your Dockerfile...
