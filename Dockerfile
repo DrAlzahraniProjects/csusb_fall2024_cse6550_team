@@ -1,19 +1,19 @@
 # Use a base image with the correct platform
-FROM --platform=${TARGETPLATFORM} debian:bullseye-slim AS base
+FROM debian:bullseye-slim AS base
 
 # Install common dependencies
 RUN apt-get update && apt-get install -y curl bzip2 python3 python3-pip nginx supervisor
 
-# Install Micromamba based on architecture
-ARG TARGETPLATFORM
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+# Determine the architecture and install Micromamba
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
         curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /opt/micromamba && \
         ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
-    elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+    elif [ "$ARCH" = "aarch64" ]; then \
         curl -L https://micromamba.snakepit.net/api/micromamba/linux-arm64/latest | tar -xvjf - -C /opt/micromamba && \
         ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
     else \
-        echo "Unsupported platform: $TARGETPLATFORM"; \
+        echo "Unsupported architecture: $ARCH"; \
         exit 1; \
     fi
 
