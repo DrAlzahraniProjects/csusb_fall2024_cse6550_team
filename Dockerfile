@@ -1,5 +1,5 @@
 # Start with a different base image
-FROM debian:bullseye-slim
+FROM arm64v8/debian:bullseye-slim
 
 # Set the working directory
 WORKDIR /app
@@ -10,21 +10,20 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Micromamba using Miniforge as an alternative
-RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o miniforge.sh && \
-    bash miniforge.sh -b -p /opt/micromamba && \
-    ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba && \
-    micromamba --version && \
-    micromamba clean --all --yes
+# Install Miniforge for ARM
+RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o miniforge.sh && \
+    bash miniforge.sh -b -p /opt/miniforge && \
+    ln -s /opt/miniforge/bin/conda /usr/local/bin/conda && \
+    conda --version
 
-# Set the environment directory for Mamba
-ENV MAMBA_PREFIX=/opt/micromamba
-ENV PATH="/opt/micromamba/bin:$PATH"
+# Set the environment directory for Conda
+ENV CONDA_PREFIX=/opt/miniforge
+ENV PATH="/opt/miniforge/bin:$PATH"
 
-# Create the Mamba environment
+# Create the Conda environment
 COPY environment.yml /app/environment.yml
-RUN micromamba create --name app_env --file /app/environment.yml && \
-    micromamba clean --all --yes
+RUN conda env create -f /app/environment.yml && \
+    conda clean --all --yes
 
 # Copy application files
 COPY . /app
