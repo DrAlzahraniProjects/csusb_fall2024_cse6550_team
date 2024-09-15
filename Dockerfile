@@ -10,29 +10,25 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Miniforge for ARM (Mamba)
+# Install Mamba for faster package management (optional)
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o miniforge.sh && \
     bash miniforge.sh -b -p /opt/miniforge && \
     ln -s /opt/miniforge/bin/mamba /usr/local/bin/mamba && \
     mamba --version
 
-# Set the environment directory for Mamba
+# Set the environment directory for Mamba (optional)
 ENV MAMBA_PREFIX=/opt/miniforge
 ENV PATH="/opt/miniforge/bin:$PATH"
 
-# Create the environment using Mamba
-COPY environment.yml /app/environment.yml
-RUN mamba env create -f /app/environment.yml && \
-    mamba clean --all --yes
+# Install Python packages from requirements.txt
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Jupyter
+# Install Jupyter (optional)
 RUN mamba install -c conda-forge jupyter
 
 # Copy application files
 COPY . /app
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 5005
 EXPOSE 5005
