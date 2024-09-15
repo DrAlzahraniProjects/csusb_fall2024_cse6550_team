@@ -1,33 +1,24 @@
-# Use the official Python image
-FROM python:3.11
+# Base image with Python
+FROM python:3.9
 
-# Set the working directory
+# Install necessary dependencies for Jupyter, Streamlit, and Supervisor
+RUN apt-get update && apt-get install -y nginx supervisor
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Install Mamba and Jupyter
-RUN pip install mamba jupyter
+# Copy app and configuration files into the container
+COPY . /app
 
-# Copy the requirements file into the container
-COPY requirements.txt requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install the Python dependencies
-RUN pip install -r requirements.txt
+# Copy Nginx and Supervisor configurations
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY nginx.conf /etc/nginx/sites-available/default
 
-# Install Nginx
-RUN apt-get update && apt-get install -y nginx
+# Expose ports: Nginx will serve on port 80
+EXPOSE 80
 
-# Copy the Nginx configuration script into the container
-COPY setup_nginx.sh /usr/local/bin/setup_nginx.sh
-
-# Make the Nginx setup script executable
-RUN chmod +x /usr/local/bin/setup_nginx.sh
-
-# Copy the Streamlit app into the container
-COPY app.py app.py
-
-# Expose port 5005
-EXPOSE 5005
-
-# Run Nginx and Streamlit
-ENTRYPOINT ["/usr/local/bin/setup_nginx.sh"]
-CMD ["streamlit", "run", "app.py", "--server.port=5005", "--server.baseUrlPath=/team"]
+# Run Supervisor to manage both Jupyter and Streamlit services
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
