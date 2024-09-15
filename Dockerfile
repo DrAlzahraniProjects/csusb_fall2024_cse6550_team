@@ -1,9 +1,12 @@
-# Use a Python base image
-FROM python:3.9-slim
+# Start with the base image
+FROM mambaorg/micromamba:1.4.2-bullseye-slim
 
-# Install system dependencies
+# Set the working directory
+WORKDIR /app
+
+# Install system dependencies (nginx, supervisor, curl, bzip2)
 RUN apt-get update && \
-    apt-get install -y nginx supervisor curl && \
+    apt-get install -y nginx supervisor curl bzip2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -11,31 +14,19 @@ RUN apt-get update && \
 RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /usr/local/bin
 
 # Set the environment directory for Mamba
-ENV MAMBA_DOCKERFILE_ACTIVATE=1
-ENV MAMBA_ENV=app_env
+ENV MAMBA_PREFIX=/opt/micromamba
+ENV PATH="$MAMBA_PREFIX/bin:$PATH"
 
-# Set the working directory
-WORKDIR /app
-
-# Copy environment.yml for Mamba environment setup
+# Create the Mamba environment
 COPY environment.yml /app/environment.yml
-
-# Create Mamba environment
-RUN micromamba create --name ${MAMBA_ENV} --file /app/environment.yml && \
+RUN micromamba create --name app_env --file /app/environment.yml && \
     micromamba clean --all --yes
 
-# Create directories for Nginx logs and PID file
-RUN mkdir -p /var/run/nginx /var/log/nginx /run
-
-# Copy application code
+# Copy application files
 COPY . /app
 
-# Copy configuration files
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY nginx.conf /etc/nginx/sites-available/default
+# Expose ports
+EXPOSE 80 5005 8888
 
-# Expose port 80 for HTTP access
-EXPOSE 80
-
-# Start supervisor to run nginx, streamlit, and jupyter
-CMD ["micromamba", "run", "-n", "${MAMBA_ENV}", "supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Start Supervisor to manage processes
+CMD ["supervisord", "-c", "/app/supervisord.conf"]
