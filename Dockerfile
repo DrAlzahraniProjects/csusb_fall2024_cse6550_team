@@ -4,13 +4,19 @@ FROM continuumio/miniconda3
 # Set the working directory
 WORKDIR /app
 
-# Install a simple package to test
-RUN conda create -n test-env python=3.8 -y && \
-    conda run -n test-env pip install streamlit && \
+# Copy requirements file and install dependencies
+COPY requirements.txt .
+
+# Create a Conda environment and install dependencies
+RUN conda create -n myenv python=3.8 -y && \
+    conda run -n myenv pip install -r requirements.txt && \
     conda clean --all --yes
 
-# Set environment variable for Streamlit
-ENV STREAMLIT_SERVER_PORT=5005
+# Install Streamlit and Jupyter
+RUN conda run -n myenv pip install streamlit jupyter
 
-# Command to run a simple command to verify the environment
-CMD ["conda", "run", "-n", "test-env", "python", "-c", "import streamlit; print('Streamlit is installed!')"]
+# Expose port 5005 for Streamlit
+EXPOSE 5005
+
+# Command to run the Streamlit app
+CMD ["conda", "run", "-n", "myenv", "streamlit", "run", "app.py", "--server.port=5005", "--server.baseUrlPath=/team5"]
