@@ -10,7 +10,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Miniforge for ARM
+# Install Miniforge for ARM (Conda-forge)
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o miniforge.sh && \
     bash miniforge.sh -b -p /opt/miniforge && \
     ln -s /opt/miniforge/bin/conda /usr/local/bin/conda && \
@@ -28,8 +28,8 @@ RUN conda env create -f /app/environment.yml && \
 # Copy application files
 COPY . /app
 
-# Expose ports
-EXPOSE 80 5005 8888
+# Expose ports for Nginx, Streamlit, and Jupyter
+EXPOSE 80 5005 8501
 
 # Start Supervisor to manage processes
 CMD ["supervisord", "-c", "/app/supervisord.conf"]
