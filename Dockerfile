@@ -11,11 +11,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Micromamba
-RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /usr/local/bin
+RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /usr/local/bin && \
+    ls -l /usr/local/bin
 
 # Set the environment directory for Mamba
 ENV MAMBA_PREFIX=/opt/micromamba
-ENV PATH="$MAMBA_PREFIX/bin:$PATH"
+ENV PATH="$MAMBA_PREFIX/bin:/usr/local/bin:$PATH"
 
 # Create the Mamba environment
 COPY environment.yml /app/environment.yml
