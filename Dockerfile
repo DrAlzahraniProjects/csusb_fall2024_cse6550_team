@@ -1,10 +1,10 @@
-# Start with a different base image for ARM64 architecture
+# Start with a different base image
 FROM arm64v8/debian:bullseye-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies including Supervisor
+# Install system dependencies (nginx, supervisor, curl, bzip2)
 RUN apt-get update && \
     apt-get install -y nginx supervisor curl bzip2 && \
     apt-get clean && \
@@ -28,14 +28,12 @@ RUN conda env create -f /app/environment.yml && \
 # Copy application files
 COPY . /app
 
-# Install necessary Python packages if not included in environment.yml
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy Nginx configuration
+# Copy Nginx and Supervisor configurations
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expose ports
+# Expose ports for Nginx and Streamlit
 EXPOSE 80 5005
 
 # Start Supervisor to manage processes
-CMD ["/usr/bin/supervisord", "-c", "/app/supervisord.conf"]
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
