@@ -1,22 +1,26 @@
-# Use the Miniconda base image
+# Use a base image with multi-platform support
 FROM continuumio/miniconda3
 
-# Set the working directory
+# Set environment variables
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# Install necessary packages
+RUN conda install -c conda-forge streamlit jupyter
+
+# Create and set the working directory
 WORKDIR /app
 
-# Copy requirements file and install dependencies
-COPY requirements.txt .
+# Copy the application files into the container
+COPY app.py /app/
+COPY requirements.txt /app/
+COPY README.md /app/
 
-# Create a Conda environment and install dependencies
-RUN conda create -n myenv python=3.8 -y && \
-    conda run -n myenv pip install -r requirements.txt && \
-    conda clean --all --yes
+# Install Python dependencies
+RUN pip install -r requirements.txt
 
-# Install Streamlit and Jupyter
-RUN conda run -n myenv pip install streamlit jupyter
-
-# Expose port 5005 for Streamlit
+# Expose the port Streamlit will run on
 EXPOSE 5005
 
 # Command to run the Streamlit app
-CMD ["conda", "run", "-n", "myenv", "streamlit", "run", "app.py", "--server.port=5005", "--server.baseUrlPath=/team5"]
+CMD ["streamlit", "run", "app.py", "--server.port=5005", "--server.baseUrlPath=/team5"]
