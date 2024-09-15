@@ -7,10 +7,10 @@ RUN apt-get update && apt-get install -y curl bzip2 python3 python3-pip nginx su
 # Determine the architecture and install Micromamba
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then \
-        curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /opt/micromamba && \
+        curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvf - -C /opt/micromamba && \
         ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
     elif [ "$ARCH" = "aarch64" ]; then \
-        curl -L https://micromamba.snakepit.net/api/micromamba/linux-arm64/latest | tar -xvjf - -C /opt/micromamba && \
+        curl -L https://micromamba.snakepit.net/api/micromamba/linux-arm64/latest | tar -xvf - -C /opt/micromamba && \
         ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba; \
     else \
         echo "Unsupported architecture: $ARCH"; \
