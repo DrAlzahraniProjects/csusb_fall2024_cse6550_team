@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && \
-    apt-get install -y curl bzip2 && \
+    apt-get install -y nginx curl bzip2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -31,8 +31,11 @@ COPY . /app
 # Install necessary Python packages if not included in environment.yml
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port for the application
-EXPOSE 5005
+# Copy Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Start Streamlit application on port 5005
-CMD ["streamlit", "run", "app.py", "--server.port", "5005"]
+# Expose ports
+EXPOSE 80 5005
+
+# Start Supervisor to manage processes
+CMD ["supervisord", "-c", "/app/supervisord.conf"]
