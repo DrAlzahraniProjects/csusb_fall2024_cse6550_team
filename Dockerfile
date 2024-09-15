@@ -1,5 +1,5 @@
-# Start with the base image
-FROM mambaorg/micromamba:1.4.2-bullseye-slim
+# Start with a different base image
+FROM debian:bullseye-slim
 
 # Set the working directory
 WORKDIR /app
