@@ -10,30 +10,26 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Miniforge for ARM (Conda-forge)
-RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o miniforge.sh && \
-    bash miniforge.sh -b -p /opt/miniforge && \
-    ln -s /opt/miniforge/bin/conda /usr/local/bin/conda && \
-    conda --version
+# Install Mambafor ARM (Mamba-forge)
+RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge3-Linux-aarch64.sh -o mambaforge.sh && \
+    bash mambaforge.sh -b -p /opt/mambaforge && \
+    ln -s /opt/mambaforge/bin/mamba /usr/local/bin/mamba && \
+    mamba --version
 
-# Set the environment directory for Conda
-ENV CONDA_PREFIX=/opt/miniforge
-ENV PATH="/opt/miniforge/bin:$PATH"
+# Set the environment directory for Mamba
+ENV MAMBA_PREFIX=/opt/mambaforge
+ENV PATH="/opt/mambaforge/bin:$PATH"
 
-# Create the Conda environment
+# Create the Mamba environment
 COPY environment.yml /app/environment.yml
-RUN conda env create -f /app/environment.yml && \
-    conda clean --all --yes
+RUN mamba env create -f /app/environment.yml && \
+    mamba clean --all --yes
 
 # Copy application files
 COPY . /app
 
-# Copy Nginx and Supervisor configurations
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Expose ports for Nginx and Streamlit
+# Expose ports for Nginx, Streamlit
 EXPOSE 80 5005
 
 # Start Supervisor to manage processes
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["supervisord", "-c", "/app/supervisord.conf"]
