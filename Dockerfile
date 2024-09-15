@@ -12,9 +12,8 @@ WORKDIR /app
 COPY environment.yml /app/environment.yml
 
 # Fix permission issues and install system dependencies
-RUN mkdir -p /var/lib/apt/lists/partial && \
-    apt-get update && \
-    apt-get install -y nginx supervisor curl && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends nginx supervisor curl && \
     micromamba create --name ${MAMBA_ENV} --file /app/environment.yml && \
     micromamba clean --all --yes && \
     rm -rf /var/lib/apt/lists/*
