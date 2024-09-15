@@ -1,16 +1,16 @@
-# Start with a different base image
+# Start with a base image for ARM architecture
 FROM arm64v8/debian:bullseye-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies (nginx, supervisor, curl, bzip2)
+# Install system dependencies (python3, pip)
 RUN apt-get update && \
-    apt-get install -y nginx supervisor curl bzip2 && \
+    apt-get install -y python3 python3-pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Mambafor ARM (Mamba-forge)
+# Install Mamba for ARM (Mamba-forge)
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge3-Linux-aarch64.sh -o mambaforge.sh && \
     bash mambaforge.sh -b -p /opt/mambaforge && \
     ln -s /opt/mambaforge/bin/mamba /usr/local/bin/mamba && \
@@ -28,8 +28,12 @@ RUN mamba env create -f /app/environment.yml && \
 # Copy application files
 COPY . /app
 
-# Expose ports for Nginx, Streamlit
-EXPOSE 80 5005
+# Install required Python packages
+RUN mamba activate base && \
+    pip install -r requirements.txt
 
-# Start Supervisor to manage processes
-CMD ["supervisord", "-c", "/app/supervisord.conf"]
+# Expose port 5005
+EXPOSE 5005
+
+# Command to run the application
+CMD ["python", "app.py"]
