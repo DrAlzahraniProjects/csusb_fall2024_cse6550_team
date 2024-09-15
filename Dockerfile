@@ -4,9 +4,9 @@ FROM arm64v8/debian:bullseye-slim
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including Supervisor
 RUN apt-get update && \
-    apt-get install -y nginx curl bzip2 && \
+    apt-get install -y nginx supervisor curl bzip2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
