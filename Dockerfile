@@ -10,6 +10,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Create directory for Micromamba
+RUN mkdir -p /opt/micromamba
+
 # Install Micromamba
 RUN curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvjf - -C /opt/micromamba && \
     ln -s /opt/micromamba/bin/micromamba /usr/local/bin/micromamba && \
