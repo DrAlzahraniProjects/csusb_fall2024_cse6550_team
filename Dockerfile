@@ -30,5 +30,5 @@ COPY . /app
 # Expose port 5005
 EXPOSE 5005
 
-# Command to run the application
-CMD ["python3", "app.py"]
+# Command to run the Streamlit app
+CMD ["streamlit", "run", "app.py", "--server.port", "5005", "--server.address", "0.0.0.0"]
