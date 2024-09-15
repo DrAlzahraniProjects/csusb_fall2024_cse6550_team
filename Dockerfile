@@ -4,7 +4,7 @@ FROM arm64v8/debian:bullseye-slim
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies (nginx, supervisor, curl, bzip2)
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y curl bzip2 && \
     apt-get clean && \
@@ -34,5 +34,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose port for the application
 EXPOSE 5005
 
-# Set the command to run the application
-CMD ["python", "app.py"]
+# Start Streamlit application
+CMD ["streamlit", "run", "app.py"]
