@@ -27,8 +27,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copy application files
 COPY . /app
 
-# Expose port 5005
-EXPOSE 5005
+# Expose ports for Streamlit and Jupyter
+EXPOSE 5005 8888
 
-# Command to run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port", "5005", "--server.address", "0.0.0.0"]
+# Command to start Streamlit and Jupyter Notebook
+CMD ["sh", "-c", "streamlit run app.py --server.port 5005 --server.address 0.0.0.0 & jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root"]
