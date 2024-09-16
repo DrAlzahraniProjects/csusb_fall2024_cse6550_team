@@ -1,5 +1,5 @@
-# Use a base image with Miniconda installed for Mamba
-FROM continuumio/miniconda3
+# Use a base image with Mambaforge installed
+FROM mambaforge/mambaforge:latest
 
 # Set the working directory
 WORKDIR /app
@@ -7,14 +7,11 @@ WORKDIR /app
 # Copy the application files to the container
 COPY . /app
 
-# Install Mamba
-RUN conda install mamba -c conda-forge
-
-# Install dependencies from requirements.txt
+# Install dependencies from requirements.txt using Mamba
 RUN mamba install --file requirements.txt
 
 # Expose port for Streamlit
 EXPOSE 5005
 
-# Run the app
+# Run the Streamlit app
 CMD ["python", "app.py"]
