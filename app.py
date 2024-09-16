@@ -1,17 +1,8 @@
 import streamlit as st
-import os
-import sys
 
-def main():
-    # Streamlit app code
-    st.title("Hello, World!")
+# Your Streamlit app code
+st.title("Hello, Streamlit!")
 
+# Ensure the app runs on port 5005
 if __name__ == "__main__":
-    # Ensure Streamlit runs on the correct port
-    if 'streamlit' in sys.argv:
-        main()
-    else:
-        # Set the environment variable for Streamlit to use port 5005
-        os.environ['STREAMLIT_SERVER_PORT'] = '5005'
-        import streamlit.cli
-        streamlit.cli.main()
+    st.run("app.py", server_port=5005, server_address="0.0.0.0")
