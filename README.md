@@ -35,7 +35,7 @@ This Docker container runs a Streamlit app.
      ```
 
 6. **Access the Applications**:
-   - **Streamlit** will be accessible at: `http://localhost/5005`
+   - **Streamlit** will be accessible at: `http://localhost:5005`
 
 ## Requirements
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) must be installed on your machine.
