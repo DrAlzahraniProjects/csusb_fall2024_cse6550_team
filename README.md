@@ -25,30 +25,18 @@ This Docker container runs both a Streamlit app at `/team5` and a Jupyter Notebo
 4. **Build the Docker Image**:
    - Run the following command to build the Docker image:
      ```bash
-     docker build -t team-app .
+     docker build -t team5-app .
      ```
 
 5. **Run the Docker Container**:
-   - Use the following command to run the Docker container, mapping the container's port 80 to the host's port 80:
+   - Use the following command to run the Docker container, mapping the container's port 5005 to the host's port 5005:
      ```bash
-     docker run -p 80:80 team-app
+     docker run -d -p 5005:5005 --name team5-container team5-app
      ```
 
 6. **Access the Applications**:
-   - **Streamlit** will be accessible at: `http://localhost/team5`
-   - **Jupyter Notebook** will be accessible at: `http://localhost/team5/jupyter`
-
-### Key Features of the Solution
-
-- **Mamba** ensures fast environment setup and dependency management.
-- **Nginx** handles the routing, so you don't need to specify ports in the URL.
-- **Supervisor** manages the services, keeping **Streamlit** and **Jupyter Notebook** running.
-- **Cross-platform compatibility** for **Windows, Linux, and macOS (including Sonoma with Apple M1 CPU)**.
-  
-### Conclusion
-
-This solution is designed to work automatically without manual intervention on multiple platforms. It uses **Mamba** for efficient dependency management, **Nginx** for reverse proxying, and **Supervisor** to manage the processes. Both **Streamlit** and **Jupyter Notebook** are served on port 80 and accessible at `/team5` and `/team5/jupyter`, respectively.
-
+   - **Streamlit** will be accessible at: `http://localhost/5005`
+   - **Jupyter Notebook** will be accessible at: `http://localhost/50051`
 
 ## Requirements
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) must be installed on your machine.
