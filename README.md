@@ -1,6 +1,6 @@
-# Team 5 HelloWorld App with Streamlit and Jupyter
+# Team 5 HelloWorld App with Streamlit
 
-This Docker container runs both a Streamlit app at `/team5` and a Jupyter Notebook at `/team5/jupyter`, accessible via port 80 without needing to specify a port in the URL.
+This Docker container runs a Streamlit app.
 
 ## How to Run
 
