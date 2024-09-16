@@ -36,7 +36,6 @@ This Docker container runs both a Streamlit app at `/team5` and a Jupyter Notebo
 
 6. **Access the Applications**:
    - **Streamlit** will be accessible at: `http://localhost/5005`
-   - **Jupyter Notebook** will be accessible at: `http://localhost/50051`
 
 ## Requirements
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) must be installed on your machine.
