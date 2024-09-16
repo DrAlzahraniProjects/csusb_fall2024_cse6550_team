@@ -16,5 +16,5 @@ RUN mamba install --file requirements.txt
 # Expose port for Streamlit
 EXPOSE 5005
 
-# Run the Streamlit app
+# Run the app
 CMD ["python", "app.py"]
